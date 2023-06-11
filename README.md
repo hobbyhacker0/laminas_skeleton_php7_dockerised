@@ -23,13 +23,14 @@ systems. This application is meant to be used as a starting place for those
 looking to get their feet wet with Laminas MVC.
 
 Note: 
-This repository is for testing upgrades. 
+This repository is intended only for quickly building a docker image for testing Laminas at a particular version.
+It includes minimal vendor code and an nginx server.
+See the original [laminas-mvc-skeleton](https://github.com/laminas/laminas-mvc-skeleton) for details.
 
 ## Installation using Composer
 
 Note:  
-laminas_skeleton_php7_dockerised is intended only for creating an image for testing Laminas at a particular version.
-It includes vendor code and an nginx server. The following section from the original [laminas-mvc-skeleton](https://github.com/laminas/laminas-mvc-skeleton) about setup and PHP dev server has been omitted.
+The following section from the original repo about composer project and PHP dev server has been omitted.
 
 ## Development mode
 
