@@ -45,28 +45,10 @@ RUN echo 'extension=apc' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini &&
     echo 'php_value[session.save_handler] = redis' >> /usr/local/etc/php-fpm.d/www.conf && \
     echo 'php_value[session.save_path] = "tcp://redis:6379"' >> /usr/local/etc/php-fpm.d/www.conf
 
-
-# Copy composer.lock and composer.json
-# COPY ./app/composer.lock ./app/composer.json /var/www/
-
-# Set working directory
-WORKDIR /var/www
-
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# # Add app user
-# RUN groupadd -g 1000 www
-# RUN useradd -u 1000 -ms /bin/bash -g www www
-
-# Copy app folder
-COPY ./app /var/www
-
-# # Copy existing application directory permissions
-# COPY --chown=www:www . /var/www
-
-# # Change current user to www
-# USER www
+WORKDIR /var/www
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

@@ -1,16 +1,11 @@
-version: '3'
 services:
-
   app:
     build:
       context: .
       dockerfile: ./php/Dockerfile
     container_name: app
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
+    user:
+      "1000:1000"
     working_dir: /var/www
     volumes:
       - ./app:/var/www
@@ -18,11 +13,9 @@ services:
     networks:
       - app-network
 
-  webserver:
+  server:
     image: nginx:alpine
-    container_name: webserver
-    restart: unless-stopped
-    tty: true
+    container_name: server
     ports:
       - "80:80"
       - "443:443"
@@ -33,26 +26,44 @@ services:
       - app-network
 
   db:
-    image: mysql:8.0.32
+    image: mysql:8.0
     container_name: db
     restart: unless-stopped
-    tty: true
-    ports:
-      - "3306:3306"
     environment:
-      MYSQL_DATABASE: app
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ./.mysql:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+  node_tools:
+    build:
+      context: .
+      dockerfile: ./node_tools/Dockerfile
+    container_name: node_tools
+    tty: true
+    user:
+      "1000:1000"
+    working_dir: /var/www
+    volumes:
+      - ./app:/var/www
+    networks:
+      - app-network
+
+  root_tools:
+    build:
+      context: .
+      dockerfile: ./root_tools/Dockerfile
+    container_name: root_tools
+    tty: true
+    working_dir: /var/www
+    volumes:
+      - ./app:/var/www
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  dbdata:
