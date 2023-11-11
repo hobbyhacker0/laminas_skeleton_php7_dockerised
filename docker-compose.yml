@@ -9,11 +9,14 @@ services:
     restart: unless-stopped
     tty: true
     environment:
+      MYSQL_HOST: '${MYSQL_HOST}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
       SERVICE_NAME: app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-      - ./app:/var/www
+      - ${APP_DIR}:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
       - app-network
@@ -27,26 +30,41 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-     - ./app:/var/www
+     - ${APP_DIR}:/var/www
      - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
 
   db:
-    image: mysql:8.0.32
+    image: mysql:8.0
     container_name: db
     restart: unless-stopped
     tty: true
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: app
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_ALLOW_ROOT_PASSWORD: ${MYSQL_ALLOW_ROOT_PASSWORD}
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./.mysql:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./.mysql:/var/lib/mysql
+    networks:
+      - app-network
+    
+  node_tools:
+    build:
+      context: .
+      dockerfile: ./node_tools/Dockerfile
+    container_name: node_tools
+    tty: true
+    user:
+      "1000:1000"
+    working_dir: /var/www
+    volumes:
+      - ${APP_DIR}:/var/www
     networks:
       - app-network
 
