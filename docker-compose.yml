@@ -54,11 +54,11 @@ services:
     networks:
       - app-network
     
-  node_tools:
+  npm_build_tools:
     build:
       context: .
-      dockerfile: ./node_tools/Dockerfile
-    container_name: node_tools
+      dockerfile: ./npm_build_tools/Dockerfile
+    container_name: npm_build_tools
     tty: true
     user:
       "1000:1000"

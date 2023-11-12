@@ -1,6 +1,6 @@
 FROM php:7.4-fpm-alpine
 
-RUN apk add --no-cache \
+RUN apk add --no-cache \ 
         bash \
         autoconf \
         g++ \
@@ -22,7 +22,6 @@ RUN apk add --no-cache \
         opcache \
         pdo_mysql \
         zip \
-        pdo_mysql \
         intl
 
 RUN pecl install apcu apcu_bc igbinary mcrypt stats-2.0.3 && \
