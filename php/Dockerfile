@@ -44,7 +44,6 @@ RUN echo 'extension=apc' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini &&
     echo 'php_value[session.save_handler] = redis' >> /usr/local/etc/php-fpm.d/www.conf && \
     echo 'php_value[session.save_path] = "tcp://redis:6379"' >> /usr/local/etc/php-fpm.d/www.conf
 
-
 # Copy composer.lock and composer.json
 # COPY ./app/composer.lock ./app/composer.json /var/www/
 
